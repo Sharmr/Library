@@ -1,0 +1,26 @@
+.card {
+    display: flex;
+    flex-direction: column;
+    position:relative;
+    width: 300px;
+    height: 200px;
+    border-style: groove;
+    justify-content: flex-start;
+    justify-self: stretch;
+}
+
+#table {
+    display: grid;
+    height: 100%;
+    width: auto;
+    grid-template-columns: repeat(auto-fit, minmax(300px,1fr));
+    grid-template-rows: repeat(auto-fit,minmax(100px, 1fr));
+    column-gap: 20px;
+    row-gap: 20px;
+}
+
+#heading {
+    font-style: bold;
+    font-size: 20px;
+    text-align: center;
+}
