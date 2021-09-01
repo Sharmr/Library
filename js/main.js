@@ -17,6 +17,11 @@ function addBook(b) {
 
 function displayBooks() {
     const table = document.getElementById("table");
+
+    while (table.firstChild) {
+        table.removeChild(table.lastChild);
+      }
+
     for(let i = 0; i < library.length; i++) {
         const book = library[i];
         const card = document.createElement('div');
@@ -82,8 +87,8 @@ function displayForm() {
 
     const form = document.createElement('form');
 
-    form.setAttribute('method', 'post');
-    form.setAttribute('action', 'submit.php');
+    //form.setAttribute('method', 'post');
+    //form.setAttribute('action', 'submit.php');
 
     const book = document.createElement('input');
     book.setAttribute('type', 'text');
@@ -97,11 +102,12 @@ function displayForm() {
 
     const pages = document.createElement('input');
     pages.setAttribute('type', 'text');
-    pages.setAttribute('name', 'pages');
+    pages.setAttribute('name', 'Pages');
     pages.setAttribute('Placeholder', 'Pages');
 
     const status = document.createElement('select');
     status.setAttribute('Placeholder', 'Status');
+    status.setAttribute('name', 'Status');
 
     const read = document.createElement('option');
     const unread = document.createElement('option');
@@ -130,6 +136,21 @@ function displayForm() {
     form.appendChild(status);
     form.appendChild(s);
     
+    form.addEventListener('submit', (e) => {
+        let book = {};
+        let element = e.target.elements;
+        console.log(element);
+        for(let i=0; i<element.length; i++) {
+            let item = element.item(i);
+            book[item.name] = item.value;
+            console.log(item);
+        }
+        console.log(book);
+        addBook(book);
+        console.log(library);
+        displayBooks();
+    });
+
     a.appendChild(form);
 }
 function makeNewCard() {
@@ -205,9 +226,46 @@ function buildCard(book) {
     status.style.position = 'absolute';
     status.style.right = 0;
     status.style.bottom = 0;
+
+    status.addEventListener('click', (e) => {
+        e.stopPropagation();
+        switch(e.target.innerText) {
+            case 'Unread': e.target.innerText = 'In Progress';
+                break;
+            case 'In Progress': e.target.innerText = 'Read';
+                break;
+            case 'Read': e.target.innerText = 'Unread';
+        }
+    });
     card.appendChild(status);
 
+    //delete
+    const del = document.createElement('div');
+    const icon = document.createElement("span");
+    icon.classList.add('material-icons');
+    icon.innerText = 'delete';
+    del.appendChild(icon);
+
+    del.style.alignSelf= 'flex-end';
+    del.style.position = 'absolute';
+    del.style.right = 0;
+    del.style.top = 0;
+
+    del.addEventListener('click', (event) => {
+        event.stopPropagation();
+        deleteCard(book);
+    });
+    card.appendChild(del);
+
+
     return card;
+}
+
+function deleteCard(book) {
+    library = library.filter((e) => e!==book);
+    console.log(library);
+
+    displayBooks();
 }
 
 window.onload = function() {
